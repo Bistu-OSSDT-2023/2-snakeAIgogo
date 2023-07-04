@@ -1,7 +1,7 @@
 package Mode;
 
 
-public class Node{
+public class Node{	
 	private int G = 0;
 	private int H = 0;
 	private Node father;
@@ -12,7 +12,7 @@ public class Node{
 		this.x=x;
 		this.y=y;
 	}
-
+	
 	public int getF() {
 		return G+H;
 	}
