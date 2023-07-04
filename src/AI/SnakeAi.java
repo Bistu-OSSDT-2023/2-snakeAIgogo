@@ -45,10 +45,10 @@ public class SnakeAi {
 				else return -1;
 			}
 		}
-
+		
 		if(f.getY()>s.getFirst().getY()&&s.getDir()!=2){
 			return 8;
-		}
+		} 
 		if(f.getY()==s.getFirst().getY()){
 			if(f.getX()>s.getFirst().getX()&&s.getDir()!=4)return 6;
 			else if(f.getX()>s.getFirst().getX()&&s.getDir()==4){
@@ -75,24 +75,24 @@ public class SnakeAi {
 	 * @param f 目标,这里目标可能不是食物所以单独做参数
 	 * @return  能到的话返回去的路径第一步，不能的话返回-1；
 	 */
-
+	
 	public int play1(Snake s,Node f) {
 		Queue<Node> q = new LinkedList<Node>();
 		Set<String> vis = new HashSet<String>();// 记录访问过的节点
 		Map<String, String> path = new HashMap<String, String>();//记录访问的路径,后来用A*算法在Node添加了father节点，这个可以去掉了
 		Stack<String> stack = new Stack<String>();//蛇去吃的路径
-
+		
 		q.add(s.getFirst());
 		while (!q.isEmpty()) {
 			Node n = q.remove();
 			if (n.getX() == f.getX() && n.getY() == f.getY()) {
-				//如果搜到了食物，开始解析路径，因为是从后添加，所以用栈倒回来
+			//如果搜到了食物，开始解析路径，因为是从后添加，所以用栈倒回来
 				String state = f.toString();
 				while (state != null &&!state.equals(s.getFirst().toString())) {
 					stack.push(state);
 					state = path.get(state);
 				}
-
+				
 				String []str;
 				//有时候食物和头挨着就会导致栈为空
 				if(stack.isEmpty()){
@@ -117,29 +117,29 @@ public class SnakeAi {
 			Node right = new Node(n.getX() + Snake.size, n.getY());
 			Node down = new Node(n.getX(), n.getY() + Snake.size);
 			Node left = new Node(n.getX() - Snake.size, n.getY());
-			if (!s.getMap().contains(up.toString()) && !vis.contains(up.toString())
-					&& up.getX() <= Snake.map_size&& up.getX() >= 10
+			if (!s.getMap().contains(up.toString()) && !vis.contains(up.toString()) 
+					&& up.getX() <= Snake.map_size&& up.getX() >= 10 
 					&& up.getY() <= Snake.map_size && up.getY() >= 10) {
 				q.add(up);
 				vis.add(up.toString());
 				path.put(up.toString(),n.toString());
 			}
 			if (!s.getMap().contains(right.toString()) && !vis.contains(right.toString())
-					&& right.getX() <= Snake.map_size&& right.getX() >= 10
+					&& right.getX() <= Snake.map_size&& right.getX() >= 10 
 					&& right.getY() <= Snake.map_size && right.getY() >= 10) {
 				q.add(right);
 				vis.add(right.toString());
 				path.put(right.toString(),n.toString());
 			}
-			if (!s.getMap().contains(down.toString()) && !vis.contains(down.toString())
-					&& down.getX() <= Snake.map_size&& down.getX() >= 10
+			if (!s.getMap().contains(down.toString()) && !vis.contains(down.toString()) 
+					&& down.getX() <= Snake.map_size&& down.getX() >= 10 
 					&& down.getY() <= Snake.map_size && down.getY() >= 10) {
 				q.add(down);
 				vis.add(down.toString());
 				path.put(down.toString(),n.toString());
 			}
-			if (!s.getMap().contains(left.toString()) && !vis.contains(left.toString())
-					&& left.getX() <= Snake.map_size&& left.getX() >= 10
+			if (!s.getMap().contains(left.toString()) && !vis.contains(left.toString()) 
+					&& left.getX() <= Snake.map_size&& left.getX() >= 10 
 					&& left.getY() <= Snake.map_size && left.getY() >= 10) {
 				q.add(left);
 				vis.add(left.toString());
@@ -150,7 +150,7 @@ public class SnakeAi {
 	}
 	/**
 	 * Make it right+   //make it fast有点难
-	 *
+	 * 
 	 * 如果不可以吃食物就追尾巴，可以吃就先派一条虚拟蛇去吃，如果吃到食物后还可以去追尾巴那就去吃，否者先追尾巴，直到去吃食物后也是安全的,就去吃。
 	 * 如果不可以吃食物也不能追尾巴就随机走，这应该是小概率事件
 	 * @param s 蛇
@@ -167,32 +167,32 @@ public class SnakeAi {
 		int realGoTofoodDir=play1(snake,f);
 		//如果吃得到食物
 		if(realGoTofoodDir!=-1){
-			//派虚拟蛇去吃
+			 //派虚拟蛇去吃
 			while(!virSnake.getFirst().toString().equals(f.toString())){
 				virSnake.move(play1(virSnake, f));
 			}
-			//虚拟蛇到尾巴去的方向
-			int goToDailDir=Asearch(virSnake,virSnake.getTail());
-			//如果虚拟蛇吃完能去尾巴，真蛇就去吃
-			if(goToDailDir!=-1)return realGoTofoodDir;
-			else {
-				snake.c++;
-				/**
-				 * 如果吃到后不能去自己尾巴，就跟着蛇尾跑
-				 * 这里可能无限跟着蛇尾跑，主要原因是我追尾巴也用的BFS，追尾巴应该走最远距离
-				 * 最远距离可以用A*算法，也就是bfs加权值贪心
-				 */
-				if(snake.c<100)return Asearch(snake,snake.getTail());
+			 //虚拟蛇到尾巴去的方向
+				int goToDailDir=Asearch(virSnake,virSnake.getTail());
+				 //如果虚拟蛇吃完能去尾巴，真蛇就去吃
+				if(goToDailDir!=-1)return realGoTofoodDir;
 				else {
+					snake.c++;
+					/**
+					 * 如果吃到后不能去自己尾巴，就跟着蛇尾跑
+					 * 这里可能无限跟着蛇尾跑，主要原因是我追尾巴也用的BFS，追尾巴应该走最远距离
+					 * 最远距离可以用A*算法，也就是bfs加权值贪心
+					 */
+					if(snake.c<100)return Asearch(snake,snake.getTail());
+					else {
 //						System.out.println("ok");
-					return realGoTofoodDir;//直接去吃算了
+						return realGoTofoodDir;//直接去吃算了
+					}
 				}
-			}
 		}else{// 如果吃不到食物
-			//真蛇到尾巴去的方向
+			 //真蛇到尾巴去的方向
 			int realGoToDailDir=Asearch(snake,snake.getTail());
 			if(realGoToDailDir==-1){
-				// 如果吃不了食物也到不了尾巴就随机走（听天由命）
+				 // 如果吃不了食物也到不了尾巴就随机走（听天由命）
 				realGoToDailDir=randomDir();
 				int i=0;
 				while(!snake.canMove(realGoToDailDir)){
@@ -244,10 +244,10 @@ public class SnakeAi {
 			for (Node n : temp){
 				// 如果该相邻节点不可通行或者该相邻节点已经在封闭列表中,则什么操作也不执行,继续检验下一个节点;
 				if (s.getMap().contains(n.toString()) || closeList.contains(n)
-						|| n.getX() > Snake.map_size|| n.getX() < 10
+						|| n.getX() > Snake.map_size|| n.getX() < 10 
 						|| n.getY() > Snake.map_size || n.getY() < 10)
 					continue;
-
+				
 				// 如果该相邻节点不在开放列表中,则将该节点添加到开放列表中,
 				// 并将该相邻节点的父节点设为当前节点,同时保存该相邻节点的G和H值,F值的计算直接我写在了Node类里
 				if(!openList.contains(n)){
@@ -258,7 +258,7 @@ public class SnakeAi {
 					openList.add(n);
 					// 当终点节点被加入到开放列表作为待检验节点时, 表示路径被找到,此时终止循环,返回方向;
 					if (n.equals(f)) {
-
+						
 						//从目标节点往前找，....卧槽这里有个坑，node不能用f，因为f与找到的节点虽然坐标相同但f没有记录father
 						Node node = openList.get(openList.size() - 1);
 						while(node!=null&&!node.equals(s.getFirst())){

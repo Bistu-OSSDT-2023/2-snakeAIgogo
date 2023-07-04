@@ -1,7 +1,8 @@
 package Mode;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import UI.FailedJFrame;
+
+import java.util.*;
 
 public class Snake {
 	/**
@@ -15,7 +16,7 @@ public class Snake {
 	/**
 	 * 地图大小
 	 */
-	public final static int map_size=310;
+	public static int map_size=500;
 	/**
 	 * 蛇头
 	 */
@@ -25,7 +26,7 @@ public class Snake {
 	 */
 	private Node tail;
 	/**
-	 蛇尾
+	 * 蛇尾
 	 */
 	private Node last;
 	/**
@@ -41,10 +42,15 @@ public class Snake {
 	 * 方向
 	 */
 	private int dir;// 8 6 2 4  上 右 下 左
+	private int OldDir;
 	/**
 	 * 食物
 	 */
 	private Node food;
+	//判断是否结束
+	public boolean IsFailed=false;
+	//控制蛇的速度
+	public int Speed = 100;
 
 	public Snake(){
 
@@ -61,7 +67,7 @@ public class Snake {
 	 */
 	public void add_Node(Node n){
 		s.add(0, n);
-
+		//蛇头向当前方向移动
 		first=s.get(0);
 		//如果添加的节点不是食物，去掉尾巴
 		if(!n.toString().equals(food.toString())){
@@ -79,26 +85,37 @@ public class Snake {
 		if(dir==8){
 			Node n=new Node(first.getX(),first.getY()-10);
 			add_Node(n);
+			updataMap(s);
 		}
 		if(dir==6){
 			Node n=new Node(first.getX()+10,first.getY());
 			add_Node(n);
+			updataMap(s);
 		}
 		if(dir==2){
 			Node n=new Node(first.getX(),first.getY()+10);
 			add_Node(n);
+			updataMap(s);
 		}
 		if(dir==4){
 			Node n=new Node(first.getX()-10,first.getY());
 			add_Node(n);
+			updataMap(s);
 		}
-		updataMap(s);
+		if((first.getX() > map_size/2 && first.getX()+10 > map_size)
+				|| (first.getX() <= map_size/2 && first.getX() < 10)
+				|| (first.getY() > map_size/2 && first.getY()+10 > map_size)
+				|| (first.getY() <= map_size/2 && first.getY() < 10)){
+			new FailedJFrame();
+			this.IsFailed=true;
+		}
 	}
 	/**
 	 * 可以设置方向的move
 	 * @param dir
 	 */
 	public void move(int dir){
+		OldDir = this.dir;
 		this.dir=dir;
 		move();
 	}
@@ -174,9 +191,10 @@ public class Snake {
 	public Node RandomFood() {
 		c=0;
 		while(true){
-			int x = 0,y;
-			 x = Snake.size*(int) (Math.random() * Snake.map_size/Snake.size)+10;
-			 y = Snake.size*(int) (Math.random() * Snake.map_size/Snake.size)+10;
+			int x, y;
+			Random r = new Random();
+			 x = (r.nextInt(map_size-10)/10) *10  +10;
+			 y = (r.nextInt(map_size-10)/10) *10  +10;
 			Node n=new Node(x,y);
 			//食物不能出现在蛇身体,s.contains居然检查不到Node,
 			//突然想到是不是Node类没重写equals方法。。
@@ -186,9 +204,13 @@ public class Snake {
 		}
 	}
 
+	public void setMap_size(int map_size) {
+		Snake.map_size = map_size;
+	}
+	
 
 	/**
-	 *
+	 * 
 	 * @return 蛇长
 	 */
 	public int getLen() {
@@ -200,11 +222,11 @@ public class Snake {
 	public Node getTail() {
 		return tail;
 	}
-
+	
 	public void setTail(Node tail) {
 		this.tail = tail;
 	}
-
+	
 	public HashSet<String> getMap() {
 		return map;
 	}
@@ -245,5 +267,9 @@ public class Snake {
 
 	public Node getFood() {
 		return food;
+	}
+
+	public void setSpeed(int speed){
+		this.Speed = speed;
 	}
 }
