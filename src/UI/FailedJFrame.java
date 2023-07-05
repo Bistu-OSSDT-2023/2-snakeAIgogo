@@ -4,9 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FailedJFrame extends JFrame {
-    JLabel label = new JLabel(new ImageIcon("../src/img/gameover.png"));
+    //JLabel label = new JLabel(new ImageIcon("..\\img\\gameover.png"));
+    JLabel label = new JLabel(new ImageIcon("../img/gameover.png"));
     public FailedJFrame(){
         initJFrame();
+        //生成图片
+        initImage();
     }
 
     public void initJFrame(){
