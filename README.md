@@ -6,7 +6,6 @@ java语言实现
 
 ## 导师
 赵永瑞
-
 ## 开发人员
 1. 胡树鄗 haronhu
 2. 吴文轩 OldKidXuan
