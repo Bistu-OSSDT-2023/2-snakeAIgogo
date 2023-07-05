@@ -16,17 +16,29 @@ java语言实现
 ## 导师
 赵永瑞
 
+## 导师
+赵永瑞
+
 ## 开发人员
 1. 胡树鄗 haronhu
 2. 吴文轩 OldKidXuan
 3. 胡俊乐 hjl-suyue
 4. 宁佳绪 YeYingcarH
 5. 李世桀 LSJGIAO2
+   
 ## 管理团队
 你说的都对组 
 
+
+## 联系方式
+邮件：hushuji5@gmail.com
+
 ## 版权所有
 该开源项目采用 MIT 许可证。
+
+## 版权所有
+该开源项目采用 MIT 许可证。
+
 
 ## 部分代码来源
 [跳转https://github.com/ogump/SnakeAI](https://github.com/ogump/SnakeAI)
