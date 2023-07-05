@@ -9,7 +9,6 @@ java语言实现
 2. 运行：打开文件夹，运行startGame即可开始游戏。
 3. 开发工具：IDEA
 
-
 ## 导师
 赵永瑞
 
@@ -23,4 +22,3 @@ java语言实现
 你说的都对组 
 ## 部分代码来源
 [跳转https://github.com/ogump/SnakeAI](https://github.com/ogump/SnakeAI)
-
