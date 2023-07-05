@@ -2,11 +2,16 @@ package UI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 public class FailedJFrame extends JFrame {
-    JLabel label = new JLabel(new ImageIcon("../src/img/gameover.png"));
+    URL imageURL = this.getClass().getResource("img/gameover.png");
+    JLabel label = new JLabel(new ImageIcon(imageURL));
+    
     public FailedJFrame(){
         initJFrame();
+        //生成图片
+        initImage();
     }
 
     public void initJFrame(){
