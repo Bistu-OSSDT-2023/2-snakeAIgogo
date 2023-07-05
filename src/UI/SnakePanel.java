@@ -2,6 +2,8 @@ package UI;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -14,10 +16,14 @@ import Mode.Snake;
 public class SnakePanel extends JPanel implements Runnable, KeyListener {
 
 	SnakeAi ai;
-	static Snake snake;
+	Snake snake;
 	int flag = 0;
 
+	int speeds = 0;
+
 	int dir =-1;
+
+	volatile boolean isRendering = true;
 
 	/**
 	 * Create the panel.
@@ -33,7 +39,7 @@ public class SnakePanel extends JPanel implements Runnable, KeyListener {
 		setFocusable(true); // 设置组件可以获得焦点
 		requestFocus(); // 请求焦点听
 		addKeyListener(this); // 添加键盘事件监器
-		//snake.move(s.getDir());
+		addFocusListener(focusListener);
 		ai=new SnakeAi();
 	}
 	@Override
@@ -51,7 +57,7 @@ public class SnakePanel extends JPanel implements Runnable, KeyListener {
 		if(flag == 0) {
 			dir = this.snake.getDir();
 		}else {
-			 dir = ai.play2(snake, snake.getFood());//选择策略：play,play1,play2
+			dir = ai.play2(snake, snake.getFood());//选择策略：play,play1,play2
 		}
 		if(dir == -1){
 			this.snake.move(dir);
@@ -92,26 +98,42 @@ public class SnakePanel extends JPanel implements Runnable, KeyListener {
 
 	@Override
 	public void run() {
-		while (true) {
+		while (isRendering) {
 			// TODO Auto-generated method stub
 			try {
-				Thread.sleep(Math.max((snake.Speed - snake.getLen()), 20));//延迟速度
+				snake.setSpeed(100 - snake.getLen()+speeds);
+				Thread.sleep(snake.Speed);//延迟速度
 				this.repaint();
-				if(SnakePanel.snake.IsFailed){
-					new FailedJFrame();
-					Thread.interrupted();
-				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
+	public void stopRendering() {
+		isRendering = false;
+	}
+	public void resumeRendering() {
+		isRendering = true;
+	}
+
 	@Override
-	public void keyTyped(KeyEvent e) {}
+	public void keyTyped(KeyEvent e) {
+
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+
+		if (e.getKeyCode() == KeyEvent.VK_M) {
+			// 执行字母键 'M' 按下的逻辑   加速
+			if(snake.Speed >20) speeds -= 20;
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_N) {
+			// 执行字母键 'N' 按下的逻辑 减速
+			if(snake.Speed <=180) speeds += 20;
+		}
 
 		//切换人工智能AI
 		if (e.getKeyCode() == KeyEvent.VK_L) {
@@ -150,5 +172,22 @@ public class SnakePanel extends JPanel implements Runnable, KeyListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+
+	}
+
+	FocusListener focusListener = new FocusListener() {
+		@Override
+		public void focusGained(FocusEvent e) {
+			// 当窗口获得焦点时，游戏继续渲染
+			resumeRendering();
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			// 当窗口失去焦点时，暂停游戏
+			flag = 0;
+			snake.setDir(-1);
+		}
+	};
 }

@@ -1,59 +1,44 @@
 package Mode;
 
 import UI.FailedJFrame;
+import UI.StartGame;
 
 import java.util.*;
 
 public class Snake {
-	/**
-	 * 计数器防死循环的
-	 */
+	//计数器防死循环的
 	public int c=0;
-	/**
-	 * 蛇身大小
-	 */
+	//蛇身大小
 	public final static int size =10;
-	/**
-	 * 地图大小
-	 */
+	//地图大小
 	public static int map_size=500;
-	/**
-	 * 蛇头
-	 */
+	//蛇头
 	private Node first;
-	/**
-	 * 蛇的尾巴，实际是尾巴走的上一个节点
-	 */
+	//蛇的尾巴-实际是尾巴走的上一个节点
 	private Node tail;
-	/**
-	 * 蛇尾
-	 */
+	//蛇尾
 	private Node last;
-	/**
-	 * 蛇的数据结构
-	 */
+	//蛇的数据结构
 	private ArrayList<Node> s=new ArrayList<Node>();
-	/**
-	 * 地图上已有蛇的节点,蛇的String存储
-	 */
+	//地图上已有蛇的节点,蛇的String存储
 	private HashSet<String> map=new HashSet<String>();
-
-	/**
-	 * 方向
-	 */
+	//方向
 	private int dir;// 8 6 2 4  上 右 下 左
-	private int OldDir;
-	/**
-	 * 食物
-	 */
+	//食物
 	private Node food;
 	//判断是否结束
-	public boolean IsFailed=false;
+	public volatile boolean IsFailed=false;
 	//控制蛇的速度
 	public int Speed = 100;
 
-	public Snake(){
+	public boolean SnakeContainsBody(ArrayList<Node> s,Node first){
+		for(int i = 1; i < s.size(); i++){
+			if(s.get(i).equals(first)) return true;
+		}
+		return false;
+	}
 
+	public Snake(){
 	}
 	public Snake(Node first,Node last,Node food,Node tail){
 		this.first=first;
@@ -105,9 +90,10 @@ public class Snake {
 		if((first.getX() > map_size/2 && first.getX()+10 > map_size)
 				|| (first.getX() <= map_size/2 && first.getX() < 10)
 				|| (first.getY() > map_size/2 && first.getY()+10 > map_size)
-				|| (first.getY() <= map_size/2 && first.getY() < 10)){
-			new FailedJFrame();
-			this.IsFailed=true;
+				|| (first.getY() <= map_size/2 && first.getY() < 10)
+				|| SnakeContainsBody(s, first)){
+			StartGame.stopGameRender();
+			IsFailed = true;
 		}
 	}
 	/**
@@ -115,7 +101,6 @@ public class Snake {
 	 * @param dir
 	 */
 	public void move(int dir){
-		OldDir = this.dir;
 		this.dir=dir;
 		move();
 	}
