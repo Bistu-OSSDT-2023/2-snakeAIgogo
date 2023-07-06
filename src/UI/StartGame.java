@@ -1,13 +1,8 @@
 package UI;
 
-import java.awt.EventQueue;
-
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.BorderLayout;
-import java.awt.im.InputContext;
-import java.util.Locale;
-
 
 public class StartGame {
 
