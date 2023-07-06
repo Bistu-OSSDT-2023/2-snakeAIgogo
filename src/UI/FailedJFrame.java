@@ -2,12 +2,11 @@ package UI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
+
 
 public class FailedJFrame extends JFrame {
-    URL imageURL = this.getClass().getResource("img/gameover.png");
-    JLabel label = new JLabel(new ImageIcon(imageURL));
-    
+    JLabel label = new JLabel(new ImageIcon("D:\\img\\gameover.png"));
+
     public FailedJFrame(){
         initJFrame();
         //生成图片

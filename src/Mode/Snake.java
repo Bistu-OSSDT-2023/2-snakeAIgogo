@@ -1,6 +1,5 @@
 package Mode;
 
-import UI.FailedJFrame;
 import UI.StartGame;
 
 import java.util.*;
